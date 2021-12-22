@@ -4,8 +4,8 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework import generics
 
-from .serializers import UserSerializer , ChangePasswordSerializer
-from django.contrib.auth.models import User
+from .serializers import UserSerializer
+from accounts.models import CustomUser
 from rest_framework import status
 from rest_framework.permissions import AllowAny ,IsAuthenticated , IsAdminUser
 import jwt, datetime
@@ -25,14 +25,3 @@ class RegisterView(APIView):
         
         
         return Response(serializer.data,status=status.HTTP_201_CREATED)
-
-class ChangePasswordView(generics.UpdateAPIView):
-
-    queryset = User.objects.all()
-    permission_classes = (IsAuthenticated,)
-    serializer_class = ChangePasswordSerializer
-class UpdateProfileView(generics.UpdateAPIView):
-
-    queryset = User.objects.all()
-    permission_classes = (IsAuthenticated,)
-    serializer_class = UpdateUserSerializer

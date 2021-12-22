@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'accounts.apps.AccountsConfig',
     'rest_framework',
-
     'rest_framework_simplejwt',
     "phonenumber_field",
 
@@ -131,7 +131,10 @@ REST_FRAMEWORK = {
 
     ],
 }
-
+PHONENUMBER_DB_FORMAT = 'NATIONAL'
+PHONENUMBER_DEFAULT_REGION = "JO"
+PHONENUMBER_DEFAULT_FORMAT = "NATIONAL"
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
 SIMPLE_JWT = {
     
