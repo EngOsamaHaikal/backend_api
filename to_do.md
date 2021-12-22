@@ -16,11 +16,14 @@
 9. create api registration
 10. create api login auth with JWT 
 
+12. create category model
+13. create product model
+
 # Done
 
 # To do
-11. finish custom user model most fields
-12. create api reset password
-13. create api change password
-14. create category model
-15. create product model
+14. finish custom user model most fields
+15. create serializer for products and categories
+16. create api CRUD for products and categories for admin user and editors
+17. edit some fields in product model
+
