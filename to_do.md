@@ -12,3 +12,4 @@
 7. install ckeditor
                     
         add ckeditor to apps
+8. install django-phonenumber-field[phonenumberslite]
