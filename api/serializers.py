@@ -2,6 +2,8 @@ from rest_framework import serializers
 from accounts.models import CustomUser
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
+from store.models import Category,Product,Review
+
 
 class UserSerializer(serializers.ModelSerializer):
 
@@ -38,3 +40,23 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = ['id','title','slug']
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    user = UserSerializer(many=False)
+
+    class Meta:
+        model = Review
+        fields = ['id','product','user','content']
+
