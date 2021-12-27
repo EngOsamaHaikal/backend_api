@@ -117,6 +117,7 @@ class Review(Base):
     product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name='product_reviews')
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name='user_reviews')
     content = models.CharField(max_length=500)
+    
     def __str__(self):
         return self.content
 
