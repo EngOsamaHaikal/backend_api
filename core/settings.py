@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts.apps.AccountsConfig',
     'store.apps.StoreConfig',
+    'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
@@ -47,15 +48,19 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
+    'django.middleware.security.SecurityMiddleware', 
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+CORS_ALLOWED_ORIGINS = [
+    'http://127.0.0.1:5500',
+    'http://127.0.0.1:8080',
+]
 ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
@@ -138,8 +143,7 @@ REST_FRAMEWORK = {
     ],
      
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 1,
-
+    'PAGE_SIZE': 4,
     
 }
 PHONENUMBER_DB_FORMAT = 'NATIONAL'

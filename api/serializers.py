@@ -2,8 +2,7 @@ from rest_framework import serializers
 from accounts.models import CustomUser
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
-from store.models import Category,Product,Review
-
+from store.models import Category,Product,Review,CartItem,Cart,CheckoutDetails
 
 class UserSerializer(serializers.ModelSerializer):
 
@@ -54,9 +53,30 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    user = UserSerializer(many=False)
 
     class Meta:
         model = Review
         fields = ['id','product','user','content']
 
+
+
+class CartItemSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = CartItem
+        fields = ( 'id', 'cart', 'product', 'quantity', 'updated_by', 'updated_on', 'created_on', 'created_by' )
+
+
+class CartSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = Cart
+        fields = ('id', 'active', 'updated_by', 'updated_on', 'created_on', 'created_by')
+
+
+class CheckoutDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CheckoutDetails
+        fields = ('id', 'cart', 'name_of_receiver', 'main_address', 'secondary_address', 'city', 'province', 'postal_code', 'phone_number', 'updated_by', 'updated_on', 'created_on', 'created_by')
