@@ -98,7 +98,7 @@ class CheckoutDetailsSerializer(serializers.ModelSerializer):
         fields = ('id', 
         'cart', 'name_of_receiver', 
         'main_address', 'secondary_address', 
-        'city', 'province', 'postal_code', 
+        'city', 'postal_code', 
         'phone_number',  'updated_on',
          'created_on', 
         )
@@ -109,7 +109,7 @@ class ShippingSerializer(serializers.ModelSerializer):
         model = ShippingDetails
         fields = ('id', 
          'name_of_receiver', 
-        'main_address', 'delivery_address', 
+        'main_address','delivery_address', 
         'city', 'postal_code', 
         'phone_number', 'updated_on',
          'created_on', 

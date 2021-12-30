@@ -20,7 +20,7 @@ class GetRoutes(APIView):
             },
             {
                 "Method":"POST",
-                "ENDPOINT":"http://127.0.0.1:8000/api/shipping/",
+                "ENDPOINT":"http://127.0.0.1:8000/api/shipping/1",
             },
             {
                 "Method":"POST",
@@ -29,7 +29,7 @@ class GetRoutes(APIView):
 
             {
                 "Method":"POST",
-                "ENDPOINT":"http://127.0.0.1:8000/api/lgoin/",
+                "ENDPOINT":"http://127.0.0.1:8000/api/login/",
             },
 
             {
