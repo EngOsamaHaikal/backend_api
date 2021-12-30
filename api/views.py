@@ -1,15 +1,10 @@
-from django.db.models.query import QuerySet
-from rest_framework import pagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status ,generics ,status
-from rest_framework.pagination import PageNumberPagination , LimitOffsetPagination
+from rest_framework.pagination import LimitOffsetPagination
 from .serializers import UserSerializer , ProductSerializer ,CategorySerializer,SubscriptionSerializer , ReviewSerializer ,CartSerializer,CartItemSerializer ,CheckoutDetailsSerializer
-from accounts.models import CustomUser
-from rest_framework.permissions import AllowAny ,IsAuthenticated , IsAdminUser
-import jwt, datetime
+from rest_framework.permissions import AllowAny
 from store.models import Product, Category,Review ,CartItem ,Cart ,CheckoutDetails 
-from accounts.models import CustomUser,NewsSubscription
 from django.shortcuts import get_object_or_404
 from accounts import utils
 from django.contrib.sites.shortcuts import get_current_site
@@ -95,7 +90,8 @@ class GetCategoriesView(generics.ListCreateAPIView):
 
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    
+    pagination_class = LimitOffsetPagination
+
 class GetCategoryView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [AllowAny]
 

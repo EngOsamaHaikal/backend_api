@@ -65,7 +65,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 class NewsSubscription(models.Model):
 
-    email = models.EmailField(max_length=255, unique=True, db_index=True)
+    email = models.EmailField(max_length=255, db_index=True)
 
     class Meta:
         db_table = 'subsucribers'

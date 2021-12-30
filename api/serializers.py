@@ -80,7 +80,13 @@ class CartSerializer(serializers.ModelSerializer):
 class CheckoutDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = CheckoutDetails
-        fields = ('id', 'cart', 'name_of_receiver', 'main_address', 'secondary_address', 'city', 'province', 'postal_code', 'phone_number', 'updated_by', 'updated_on', 'created_on', 'created_by')
+        fields = ('id', 
+        'cart', 'name_of_receiver', 
+        'main_address', 'secondary_address', 
+        'city', 'province', 'postal_code', 
+        'phone_number', 'updated_by', 'updated_on',
+         'created_on', 'created_by'
+        )
 
 class SubscriptionSerializer(serializers.ModelSerializer):
 
