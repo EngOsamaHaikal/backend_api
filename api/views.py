@@ -141,7 +141,7 @@ class GetCartItemView(generics.RetrieveUpdateDestroyAPIView):
     queryset = CartItem.objects.all()
     serializer_class = CartItemSerializer
 
-class GetShippingDetailsView(generics.ListCreateAPIView):
+class GetShippingDetailsView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [AllowAny]
     queryset = ShippingDetails.objects.all()
     serializer_class = ShippingSerializer

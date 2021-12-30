@@ -99,8 +99,8 @@ class CheckoutDetailsSerializer(serializers.ModelSerializer):
         'cart', 'name_of_receiver', 
         'main_address', 'secondary_address', 
         'city', 'province', 'postal_code', 
-        'phone_number', 'updated_by', 'updated_on',
-         'created_on', 'created_by'
+        'phone_number',  'updated_on',
+         'created_on', 
         )
 
 
@@ -111,8 +111,8 @@ class ShippingSerializer(serializers.ModelSerializer):
          'name_of_receiver', 
         'main_address', 'delivery_address', 
         'city', 'postal_code', 
-        'phone_number', 'updated_by', 'updated_on',
-         'created_on', 'created_by'
+        'phone_number', 'updated_on',
+         'created_on', 
         )
 
 

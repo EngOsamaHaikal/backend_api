@@ -18,7 +18,7 @@ urlpatterns = [
     path('api/cart/',GetCartView.as_view(), name='cart'),
     path('api/cart/<str:pk>/',GetCartItemView.as_view(), name='cart_item'),
     path('api/checkout/',GetCheckoutDetailsView.as_view(), name='checkout'),
-    path('api/shipping/',GetShippingDetailsView.as_view(), name='checkout'),
+    path('api/shipping/<str:pk>/',GetShippingDetailsView.as_view(), name='checkout'),
 
     path('api/send_email/',SendEmailView.as_view(), name='checkout'),
 
