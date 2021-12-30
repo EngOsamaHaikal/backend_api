@@ -96,6 +96,34 @@ class CartItem(Base):
         self.update(quantity=quantity)
 
 
+class WishList(Base):
+    user = models.ForeignKey(CustomUser,null=True,blank=True, default=None, on_delete=models.CASCADE)
+    active = models.BooleanField(default=True)
+
+
+    def get_items(self):
+        return self.cart_items.prefetch_related('product').all()
+
+    @classmethod
+    def delete_unactive_carts(cls):
+    # deletes all non-active cart instances
+        cls.objects.filter(active=False).delete()
+
+    @classmethod
+    def delete_all_carts(cls):
+        cls.objects.all().delete()
+
+
+
+class WishListItem(Base):
+    
+    wishlist = models.ForeignKey(Cart, related_name='wishlist_items', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.product.title
+
+
 
 class CheckoutDetails(Base):
     user = models.ForeignKey(CustomUser, null=True, on_delete=models.CASCADE)
