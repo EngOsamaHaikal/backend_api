@@ -3,7 +3,7 @@ from rest_framework import serializers
 from accounts.models import CustomUser , NewsSubscription
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
-from store.models import Category,Product,Review,CartItem,Cart,CheckoutDetails
+from store.models import ShippingDetails,Category,Product,Review,CartItem,Cart,CheckoutDetails,WishListItem,WishList
 
 class UserSerializer(serializers.ModelSerializer):
 
@@ -61,6 +61,21 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 
+class WishListItemSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = WishListItem
+        fields = ( 'id', 'wishlist', 'product', 'updated_by', 'updated_on', 'created_on', 'created_by' )
+
+
+class WishListSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = WishList
+        fields = ('id', 'active', 'updated_by', 'updated_on', 'created_on', 'created_by')
+
 class CartItemSerializer(serializers.ModelSerializer):
 
 
@@ -87,6 +102,19 @@ class CheckoutDetailsSerializer(serializers.ModelSerializer):
         'phone_number', 'updated_by', 'updated_on',
          'created_on', 'created_by'
         )
+
+
+class ShippingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShippingDetails
+        fields = ('id', 
+         'name_of_receiver', 
+        'main_address', 'delivery_address', 
+        'city', 'postal_code', 
+        'phone_number', 'updated_by', 'updated_on',
+         'created_on', 'created_by'
+        )
+
 
 class SubscriptionSerializer(serializers.ModelSerializer):
 

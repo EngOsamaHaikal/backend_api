@@ -2,9 +2,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status ,generics ,status
 from rest_framework.pagination import LimitOffsetPagination
-from .serializers import UserSerializer , ProductSerializer ,CategorySerializer,SubscriptionSerializer , ReviewSerializer ,CartSerializer,CartItemSerializer ,CheckoutDetailsSerializer
+from .serializers import UserSerializer ,ShippingSerializer, ProductSerializer ,CategorySerializer,WishListSerializer,WishListItemSerializer,SubscriptionSerializer , ReviewSerializer ,CartSerializer,CartItemSerializer ,CheckoutDetailsSerializer
 from rest_framework.permissions import AllowAny
-from store.models import Product, Category,Review ,CartItem ,Cart ,CheckoutDetails 
+from store.models import Product, Category,Review ,CartItem ,Cart ,CheckoutDetails, ShippingDetails, WishList ,WishListItem
 from django.shortcuts import get_object_or_404
 from accounts import utils
 from django.contrib.sites.shortcuts import get_current_site
@@ -17,6 +17,10 @@ class GetRoutes(APIView):
             {
                 "Method":"POST",
                 "ENDPOINT":"http://127.0.0.1:8000/api/send_email/",
+            },
+            {
+                "Method":"POST",
+                "ENDPOINT":"http://127.0.0.1:8000/api/shipping/",
             },
             {
                 "Method":"POST",
@@ -117,6 +121,16 @@ class GetProductView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProductSerializer
 
 
+class GetWishListView(generics.ListAPIView):
+    permission_classes = [AllowAny]
+    queryset = WishList.objects.all()
+    serializer_class = WishListSerializer
+
+class GetWishListItemView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [AllowAny]
+    queryset = WishListItem.objects.all()
+    serializer_class = WishListItemSerializer
+
 class GetCartView(generics.ListAPIView):
     permission_classes = [AllowAny]
     queryset = Cart.objects.all()
@@ -126,6 +140,12 @@ class GetCartItemView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [AllowAny]
     queryset = CartItem.objects.all()
     serializer_class = CartItemSerializer
+
+class GetShippingDetailsView(generics.ListCreateAPIView):
+    permission_classes = [AllowAny]
+    queryset = ShippingDetails.objects.all()
+    serializer_class = ShippingSerializer
+
 
 class GetCheckoutDetailsView(generics.ListCreateAPIView):
     permission_classes = [AllowAny]

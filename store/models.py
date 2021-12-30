@@ -105,23 +105,24 @@ class WishList(Base):
         return self.cart_items.prefetch_related('product').all()
 
     @classmethod
-    def delete_unactive_carts(cls):
+    def delete_unactive_wishlists(cls):
     # deletes all non-active cart instances
         cls.objects.filter(active=False).delete()
 
     @classmethod
-    def delete_all_carts(cls):
+    def delete_all_wishlists(cls):
         cls.objects.all().delete()
 
 
 
 class WishListItem(Base):
     
-    wishlist = models.ForeignKey(Cart, related_name='wishlist_items', on_delete=models.CASCADE)
+    wishlist = models.ForeignKey(WishList, related_name='wishlist_items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.product.title
+
 
 
 
@@ -132,7 +133,20 @@ class CheckoutDetails(Base):
     main_address = models.CharField(max_length=200)
     secondary_address = models.CharField(max_length=100, null=True)
     city = models.CharField(max_length=100)
-    province = models.CharField(max_length=20)
+    delivery_address = models.CharField(max_length=100, null=True)
+    postal_code = models.CharField(max_length=12)
+    phone_number = models.CharField(max_length=12)
+
+    def __str__(self):
+        return  'products to ' + self.main_address + ' for ' + self.name_of_receiver
+    
+class ShippingDetails(Base):
+    user = models.ForeignKey(CustomUser, null=True, on_delete=models.CASCADE)
+    name_of_receiver = models.CharField(max_length=100)
+    main_address = models.CharField(max_length=200)
+    secondary_address = models.CharField(max_length=100, null=True)
+    city = models.CharField(max_length=100)
+    delivery_address = models.CharField(max_length=100, null=True)
     postal_code = models.CharField(max_length=12)
     phone_number = models.CharField(max_length=12)
 
