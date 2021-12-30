@@ -161,29 +161,3 @@ class SendEmailView(APIView):
 
         utils.Util.send_email(data)
         return Response(email, status=status.HTTP_201_CREATED)
-
-    pass
-
-"""class GetReviewsView(APIView):
-    permission_classes = [AllowAny]
-
-    def get(self,request,pk):
-        
-        product = Product.objects.get(id=pk)
-        reviews = Review.objects.filter(product = product)
-        serializer = ReviewSerializer(reviews, many=True)
-
-        return Response(serializer.data)
-    def post(self,request,pk):
-        
-        review = ReviewSerializer(data = request.data)
-
-        if review.is_valid():
-            review.save()
-            return Response(review.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(review.errors, status=status.HTTP_400_BAD_REQUEST)
-
- 
-
-"""
