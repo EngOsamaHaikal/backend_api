@@ -4,18 +4,25 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status ,generics ,status
 from rest_framework.pagination import PageNumberPagination , LimitOffsetPagination
-from .serializers import UserSerializer , ProductSerializer ,CategorySerializer , ReviewSerializer ,CartSerializer,CartItemSerializer ,CheckoutDetailsSerializer
+from .serializers import UserSerializer , ProductSerializer ,CategorySerializer,SubscriptionSerializer , ReviewSerializer ,CartSerializer,CartItemSerializer ,CheckoutDetailsSerializer
 from accounts.models import CustomUser
 from rest_framework.permissions import AllowAny ,IsAuthenticated , IsAdminUser
 import jwt, datetime
-from store.models import Product, Category,Review ,CartItem ,Cart ,CheckoutDetails
+from store.models import Product, Category,Review ,CartItem ,Cart ,CheckoutDetails 
+from accounts.models import CustomUser,NewsSubscription
 from django.shortcuts import get_object_or_404
-
+from accounts import utils
+from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse
 
 class GetRoutes(APIView):
 
     def get(self,request):
         routes = [
+            {
+                "Method":"POST",
+                "ENDPOINT":"http://127.0.0.1:8000/api/send_email/",
+            },
             {
                 "Method":"POST",
                 "ENDPOINT":"http://127.0.0.1:8000/api/register/",
@@ -33,7 +40,7 @@ class GetRoutes(APIView):
             
             {
                 "Method":["GET","POST"],
-                "ENDPOINT":"localhost:8000/api/categories/",
+                "ENDPOINT":"http://127.0.0.1:8000/api/categories/",
             },
 
             { 
@@ -140,6 +147,26 @@ class GetReviewsView(generics.RetrieveUpdateDestroyAPIView):
 
         return reviews
     serializer_class = ReviewSerializer
+
+class SendEmailView(APIView):
+    serializer_class = SubscriptionSerializer
+    def post(self,request):
+        email = request.data
+        serializer = SubscriptionSerializer(data=email)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+ 
+        current_site = get_current_site(request).domain
+        absurl = 'http://'+current_site
+        email_body = 'Hi '+email["email"] + \
+            ' Use the link below to verify your email \n' + absurl
+        data = {'email_body': email_body, 'to_email': email["email"],
+                'email_subject': 'Hi this is me'}
+
+        utils.Util.send_email(data)
+        return Response(email, status=status.HTTP_201_CREATED)
+
+    pass
 
 """class GetReviewsView(APIView):
     permission_classes = [AllowAny]

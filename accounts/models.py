@@ -62,3 +62,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
             'refresh': str(refresh),
             'access': str(refresh.access_token)
         }
+
+class NewsSubscription(models.Model):
+
+    email = models.EmailField(max_length=255, unique=True, db_index=True)
+
+    class Meta:
+        db_table = 'subsucribers'
+
+    def __str__(self):
+        return self.email

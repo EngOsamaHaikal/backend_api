@@ -1,5 +1,6 @@
+from django.db.models import fields
 from rest_framework import serializers
-from accounts.models import CustomUser
+from accounts.models import CustomUser , NewsSubscription
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from store.models import Category,Product,Review,CartItem,Cart,CheckoutDetails
@@ -80,3 +81,12 @@ class CheckoutDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = CheckoutDetails
         fields = ('id', 'cart', 'name_of_receiver', 'main_address', 'secondary_address', 'city', 'province', 'postal_code', 'phone_number', 'updated_by', 'updated_on', 'created_on', 'created_by')
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = NewsSubscription
+        fields = ("email",)
+        extra_kwargs = {
+            'email': {'required': True},
+        }
