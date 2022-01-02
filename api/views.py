@@ -275,6 +275,8 @@ class GetReviewsView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReviewSerializer
 
 class SendEmailView(APIView):
+    permission_classes = [AllowAny]
+
     serializer_class = SubscriptionSerializer
     def post(self,request):
         email = request.data
