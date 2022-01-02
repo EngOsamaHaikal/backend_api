@@ -1,3 +1,7 @@
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth import get_user_model
+from django_extensions.db.models import TimeStampedModel
 from django.db import models
 from django.urls import reverse
 from accounts.models import CustomUser
@@ -14,26 +18,22 @@ sizes = (
 class Base(models.Model):
     """
     Abstract class with 4 attributes:
-            updated_by  CHARFIELD(100)
-            updated_on  DateField
-            created_on  DateField
-            created_by  CHARFIELD(100)
+            updated_on  DateTimeField
+            created_on  DateTimeField
     """
 
-    updated_by = models.CharField(max_length=100,null=True)
     updated_on = models.DateTimeField(auto_now=True,null=True)
     created_on = models.DateTimeField(auto_now_add=True,null=True)
-    created_by = models.CharField(max_length=100,null=True)
     class Meta:
         abstract = True
         ordering = ('created_on',)
 
 # Create your models here.
 class Category(Base):
-    title = models.CharField(max_length=200,null=True,blank=True,unique=True)
+    name = models.CharField(max_length=200,null=True,blank=True,unique=True)
     slug = models.SlugField(max_length=200,null=True,unique=True)
     class Meta:
-        ordering = ('title',)
+        ordering = ('name',)
         verbose_name = 'category'
         verbose_name_plural = 'categories'
 
@@ -41,10 +41,28 @@ class Category(Base):
         return reverse('products_by_category', args=[self.slug])
 
     def __str__(self):
-        return self.title
+        return self.name
+class Variant(Base):
+    name = models.CharField(max_length=200,null=True,blank=True,unique=True)
+    slug = models.SlugField(max_length=200,null=True,unique=True)
+    class Meta:
+        ordering = ('name',)
+        verbose_name = 'variant'
+        verbose_name_plural = 'variants'
+
+    def get_url(self):
+        return reverse('products_by_category', args=[self.slug])
+
+    def __str__(self):
+        return self.name
+
+
 
 class Product(Base):
     category = models.ManyToManyField(Category,blank=True)
+    variant = models.ManyToManyField(
+        Variant, related_name='variants', blank=True)
+
     title = models.CharField(max_length=250,null=True)
     slug = models.SlugField(max_length=250,null=True,unique=True)
     description = models.TextField(max_length=500,null=True,blank=True)
@@ -54,71 +72,50 @@ class Product(Base):
     available = models.BooleanField(default=True)
     sizes = models.CharField(max_length=120, choices=sizes, default="1Kg")
     status = models.CharField(max_length=120, choices=choices, default="draft")
-    image = models.ImageField(upload_to='media/images/',null=True)
+    image = models.ImageField(upload_to='media/images/', null=True)
+
     def __str__(self):
 
         return self.title
 
-class Cart(Base):
-    user = models.ForeignKey(CustomUser,null=True,blank=True, default=None, on_delete=models.CASCADE)
-    active = models.BooleanField(default=True)
 
 
-    def get_items(self):
-        return self.cart_items.prefetch_related('product').all()
-
-    @classmethod
-    def delete_unactive_carts(cls):
-    # deletes all non-active cart instances
-        cls.objects.filter(active=False).delete()
-
-    @classmethod
-    def delete_all_carts(cls):
-        cls.objects.all().delete()
+class Cart(TimeStampedModel):
+    user = models.OneToOneField(
+        CustomUser, related_name="user_cart", on_delete=models.CASCADE
+    )
+    total = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0, blank=True, null=True
+    )
 
 
+@receiver(post_save, sender=CustomUser)
+def create_user_cart(sender, created, instance, *args, **kwargs):
+    if created:
+        Cart.objects.create(user=instance)
 
-class CartItem(Base):
-    
-    cart = models.ForeignKey(Cart, related_name='cart_items', on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+class CartItem(TimeStampedModel):
+    cart = models.ForeignKey(
+        Cart, related_name="cart_item", on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product, related_name="cart_product", on_delete=models.CASCADE
+    )
     quantity = models.IntegerField(default=1)
-
-    def __str__(self):
-        return self.product.title + ' cart item from cart object ' + str(self.cart.id)
-
-    def find_total_cost(self):
-        tax = 5
-        self.total_cost = self.quantity * self.product.current_price * tax
-        return self.total_cost
-
-    def update_quantity(self, quantity):
-        self.update(quantity=quantity)
 
 
 class WishList(Base):
-    user = models.ForeignKey(CustomUser,null=True,blank=True, default=None, on_delete=models.CASCADE)
-    active = models.BooleanField(default=True)
-
-
-    def get_items(self):
-        return self.cart_items.prefetch_related('product').all()
-
-    @classmethod
-    def delete_unactive_wishlists(cls):
-    # deletes all non-active cart instances
-        cls.objects.filter(active=False).delete()
-
-    @classmethod
-    def delete_all_wishlists(cls):
-        cls.objects.all().delete()
-
+    user = models.OneToOneField(
+        CustomUser, related_name="user_wishlist", on_delete=models.CASCADE
+    )
 
 
 class WishListItem(Base):
     
     wishlist = models.ForeignKey(WishList, related_name='wishlist_items', on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product, related_name="wishlist_product", on_delete=models.CASCADE
+    )
 
     def __str__(self):
         return self.product.title

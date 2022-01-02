@@ -17,10 +17,9 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ('id','username', 'password', 'password2', 'email', 'first_name', 'last_name')
+        fields = ('id','username', 'password', 'password2', 'email', 'phone_number')
         extra_kwargs = {
-            'first_name': {'required': True},
-            'last_name': {'required': True},
+            'phone_number': {'required': True},
         }
 
     def validate(self, attrs):
@@ -33,6 +32,7 @@ class UserSerializer(serializers.ModelSerializer):
         user = CustomUser.objects.create(
             username=validated_data['username'],
             email=validated_data['email'],
+            phone_number=validated_data['phone_number'],
         )
 
         
@@ -50,7 +50,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id','title','slug']
+        fields = ['id','name','slug']
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -66,7 +66,7 @@ class WishListItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WishListItem
-        fields = ( 'id', 'wishlist', 'product', 'updated_by', 'updated_on', 'created_on', 'created_by' )
+        fields = ( 'id', 'wishlist', 'product', 'updated_on', 'created_on' )
 
 
 class WishListSerializer(serializers.ModelSerializer):
@@ -74,23 +74,39 @@ class WishListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WishList
-        fields = ('id', 'active', 'updated_by', 'updated_on', 'created_on', 'created_by')
+        fields = '__all__'
+
+class CartProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = (
+            "title",
+            "seller",
+            "quantity",
+            "price",
+            "image",
+        )
+
 
 class CartItemSerializer(serializers.ModelSerializer):
+    # product = CartProductSerializer(required=False)
+    class Meta:
+        model = CartItem
+        fields = ["cart", "product", "quantity"]
 
+
+class CartItemMiniSerializer(serializers.ModelSerializer):
+    product = CartProductSerializer(required=False)
 
     class Meta:
         model = CartItem
-        fields = ( 'id', 'cart', 'product', 'quantity', 'updated_by', 'updated_on', 'created_on', 'created_by' )
+        fields = ["product", "quantity"]
 
 
-class CartSerializer(serializers.ModelSerializer):
-
-
+class CartItemUpdateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Cart
-        fields = ('id', 'active', 'updated_by', 'updated_on', 'created_on', 'created_by')
-
+        model = CartItem
+        fields = ["product", "quantity"]
 
 class CheckoutDetailsSerializer(serializers.ModelSerializer):
     class Meta:
